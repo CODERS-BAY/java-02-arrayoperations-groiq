@@ -1,11 +1,16 @@
 package exercise.arraysTDD;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class which performs various operations with integer arrays.
  */
 public class ArrayOperations {
+    private static final boolean DEBUG = true;
+
     private final int[] numbers;      // array that needs to be sorted.
     private final int[] unsorted;     // reference array which stays unsorted.
 
@@ -40,10 +45,12 @@ public class ArrayOperations {
      */
     public int[] sort() {
         // room to link various sorting algorithms
-       gnomeSort();
+       // gnomeSort();
+        bucketSort(numbers);
 
        return numbers;
     }
+
 
     /**
      * @return the sorted array in reverse order
@@ -164,8 +171,21 @@ public class ArrayOperations {
         return i1 > i2 ? i1 : i2;
     }
 
+    static void trace(String msg, int[] data) {
+        if (DEBUG) {
+            System.out.println(msg + " data=" + Arrays.toString(data));
+        }
+    }
+
+    static void trace(String msg) {
+        if (DEBUG) {
+            System.out.println(msg);
+        }
+    }
+
+
     /* **********************************************************
-     *   Sorting algorithms
+     *   Sorting algorithms 
      * ***********************************************************/
 
     private void gnomeSort() {
@@ -180,5 +200,70 @@ public class ArrayOperations {
             }
         }
     }
+
+    private void bucketSort(int[] data) {
+        trace("called bucket sort.", data);
+
+        // find max bit shift
+        int maxShift = 0;
+        for (int i :
+                data) {
+            trace("current i: " + i);
+            i = i >> maxShift;
+            while (i != 0) {
+                maxShift++;
+                i = i >> 1;
+            }
+            trace("maxShift is now " + maxShift);
+        }
+
+        // create the basic bucket
+        List<Integer> dataAsList = new ArrayList<>();
+        for (int i :
+                data) {
+            dataAsList.add(i);
+        }
+        trace("dataAsList is " + dataAsList);
+        Bucket basicBucket = new Bucket(maxShift, dataAsList);
+
+
+        // read the basic bucket
+
+
+
+
+
+
+
+
+        trace("finishing bucket sort.", data);
+    }
+
+}
+
+
+
+class Bucket {
+
+    private final int currShifter;
+    private final List<List<Integer>> content;
+    private Bucket _0;
+    private Bucket _1;
+
+    public Bucket(int currShifter, List<Integer> input) {
+        ArrayOperations.trace("Creating bucket from currShifter=" + currShifter + " and input = " + input + "...");
+        this.currShifter = currShifter;
+
+        // set up one list for 0s and one for 1s
+        this.content = new ArrayList<>();
+        this.content.add(new ArrayList<>());
+        this.content.add(new ArrayList<>());
+        ArrayOperations.trace("Bucket.content is " + content);
+
+        // distribute content over the two lists
+
+        ArrayOperations.trace("Bucket content is now " + content);
+    }
+
 }
 
