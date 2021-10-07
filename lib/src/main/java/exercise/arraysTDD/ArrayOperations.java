@@ -39,7 +39,13 @@ public class ArrayOperations {
      * @see <a href="sorting algortihms">http://faculty.cs.niu.edu/~hutchins/csci241/sorting.htm</a>
      */
     public int[] sort() {
+        // room to link various sorting algorithms
+       gnomeSort();
 
+       return numbers;
+    }
+
+    public void gnomeSort() {
         int pos = 0;
         while (pos < (numbers.length - 1)) {
             if (numbers[pos] > numbers[pos+1]) {
@@ -51,7 +57,6 @@ public class ArrayOperations {
             }
         }
 
-       return numbers;
     }
 
     /**
