@@ -193,44 +193,41 @@ public class ArrayOperations {
     private void bucketSort(int[] data) {
         trace("called bucket sort.", data);
 
-        // find max bit shift
+        // find highest bit shift
         int maxShift = 0;
         for (int i :
                 data) {
-//            trace("current i: " + i);
+            trace("i=" + i + ", maxShift=" + maxShift + ", i >> maxShift=" + String.valueOf(i >> maxShift));
             i = i >> maxShift;
             while (i != 0) {
                 maxShift++;
                 i = i >> 1;
             }
-            trace("i=" + i + ", maxShift=" + maxShift + ", i >> maxShift=" + String.valueOf(i >> maxShift));
+            trace("maxShift set to " + maxShift);
         }
 
-        // create the basic bucket
+        // create buckets
         List<Integer> dataAsList = new ArrayList<>();
         for (int i :
                 data) {
             dataAsList.add(i);
         }
-        trace("dataAsList is " + dataAsList);
         Bucket basicBucket = new Bucket(maxShift-1, dataAsList);
 
-
-        // read the basic bucket
+        // read buckets
         dataAsList = basicBucket.read();
 
         // write back to data
         for (int i = 0; i < data.length; i++) {
             data[i] = dataAsList.get(i);
         }
-
         trace("finishing bucket sort.", data);
     }
 
 }
 
 class MyLogger {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     static void trace(String msg, int[] data) {
         if (DEBUG) {
@@ -246,7 +243,6 @@ class MyLogger {
 
 }
 
-
 class Bucket {
 
     private final int currShifter;
@@ -254,8 +250,7 @@ class Bucket {
     private final Bucket[] subbuckets;
 
     public Bucket(int currShifter, List<Integer> input) {
-        trace("Creating bucket from currShifter=" + currShifter + " and input = " + input + "...");
-
+        trace("Creating bucket from currShifter = " + currShifter + " and input = " + input + "...");
 
         this.currShifter = currShifter;
 
@@ -263,7 +258,6 @@ class Bucket {
         this.content = new ArrayList<>();
         this.content.add(new ArrayList<>());
         this.content.add(new ArrayList<>());
-        trace("Bucket.content is " + content);
         this.subbuckets = new Bucket[2];
 
         // distribute content over the two lists
@@ -283,6 +277,7 @@ class Bucket {
                 subbuckets[i] = new Bucket((currShifter - 1), sublist);
             }
         }
+        trace("finished constructor from currShifter = " + currShifter + " and input = " + input);
     }
 
     private boolean noDuplicates(List<Integer> data) {
@@ -300,7 +295,7 @@ class Bucket {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             List<Integer> sublist = content.get(i);
-            trace("reading: sublist: " + sublist);
+            trace("sublist: " + sublist);
             if (subbuckets[i] != null) {
                 trace("reading list from subbucket");
                 sublist = subbuckets[i].read();
