@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static exercise.arraysTDD.MyLogger.trace;
+
 /**
  * Utility class which performs various operations with integer arrays.
  */
 public class ArrayOperations {
-    private static final boolean DEBUG = true;
-
     private final int[] numbers;      // array that needs to be sorted.
     private final int[] unsorted;     // reference array which stays unsorted.
 
@@ -171,17 +171,6 @@ public class ArrayOperations {
         return i1 > i2 ? i1 : i2;
     }
 
-    static void trace(String msg, int[] data) {
-        if (DEBUG) {
-            System.out.println(msg + " data=" + Arrays.toString(data));
-        }
-    }
-
-    static void trace(String msg) {
-        if (DEBUG) {
-            System.out.println(msg);
-        }
-    }
 
 
     /* **********************************************************
@@ -241,6 +230,22 @@ public class ArrayOperations {
 
 }
 
+class MyLogger {
+    private static final boolean DEBUG = true;
+
+    static void trace(String msg, int[] data) {
+        if (DEBUG) {
+            System.out.println(msg + " data=" + Arrays.toString(data));
+        }
+    }
+
+    static void trace(String msg) {
+        if (DEBUG) {
+            System.out.println(msg);
+        }
+    }
+
+}
 
 
 class Bucket {
@@ -251,18 +256,19 @@ class Bucket {
     private Bucket _1;
 
     public Bucket(int currShifter, List<Integer> input) {
-        ArrayOperations.trace("Creating bucket from currShifter=" + currShifter + " and input = " + input + "...");
+        trace("Creating bucket from currShifter=" + currShifter + " and input = " + input + "...");
         this.currShifter = currShifter;
 
         // set up one list for 0s and one for 1s
         this.content = new ArrayList<>();
         this.content.add(new ArrayList<>());
         this.content.add(new ArrayList<>());
-        ArrayOperations.trace("Bucket.content is " + content);
+        trace("Bucket.content is " + content);
 
         // distribute content over the two lists
+        
 
-        ArrayOperations.trace("Bucket content is now " + content);
+        trace("Bucket content is now " + content);
     }
 
 }
