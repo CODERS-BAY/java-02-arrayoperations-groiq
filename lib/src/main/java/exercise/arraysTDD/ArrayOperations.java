@@ -45,20 +45,6 @@ public class ArrayOperations {
        return numbers;
     }
 
-    private void gnomeSort() {
-        int pos = 0;
-        while (pos < (numbers.length - 1)) {
-            if (numbers[pos] > numbers[pos+1]) {
-                swap(pos, (pos+1));
-                pos--;
-                if (pos < 0) pos = 0;
-            } else {
-                pos++;
-            }
-        }
-
-    }
-
     /**
      * @return the sorted array in reverse order
      */
@@ -178,5 +164,21 @@ public class ArrayOperations {
         return i1 > i2 ? i1 : i2;
     }
 
+    /* **********************************************************
+     *   Sorting algorithms
+     * ***********************************************************/
+
+    private void gnomeSort() {
+        int pos = 0;
+        while (pos < (numbers.length - 1)) {
+            if (numbers[pos] > numbers[pos+1]) {
+                swap(pos, (pos+1));
+                pos--;
+                if (pos < 0) pos = 0;
+            } else {
+                pos++;
+            }
+        }
+    }
 }
 
