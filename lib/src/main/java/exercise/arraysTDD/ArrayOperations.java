@@ -197,13 +197,13 @@ public class ArrayOperations {
         int maxShift = 0;
         for (int i :
                 data) {
-            trace("current i: " + i);
+//            trace("current i: " + i);
             i = i >> maxShift;
             while (i != 0) {
                 maxShift++;
                 i = i >> 1;
             }
-            trace("maxShift is now " + maxShift);
+            trace("i=" + i + ", maxShift=" + maxShift + ", i >> maxShift=" + String.valueOf(i >> maxShift));
         }
 
         // create the basic bucket
@@ -213,17 +213,16 @@ public class ArrayOperations {
             dataAsList.add(i);
         }
         trace("dataAsList is " + dataAsList);
-        Bucket basicBucket = new Bucket(maxShift, dataAsList);
+        Bucket basicBucket = new Bucket(maxShift-1, dataAsList);
 
 
         // read the basic bucket
+        dataAsList = basicBucket.read();
 
-
-
-
-
-
-
+        // write back to data
+        for (int i = 0; i < data.length; i++) {
+            data[i] = dataAsList.get(i);
+        }
 
         trace("finishing bucket sort.", data);
     }
@@ -231,7 +230,7 @@ public class ArrayOperations {
 }
 
 class MyLogger {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     static void trace(String msg, int[] data) {
         if (DEBUG) {
@@ -252,24 +251,67 @@ class Bucket {
 
     private final int currShifter;
     private final List<List<Integer>> content;
-    private Bucket _0;
-    private Bucket _1;
+    private final Bucket[] subbuckets;
 
     public Bucket(int currShifter, List<Integer> input) {
         trace("Creating bucket from currShifter=" + currShifter + " and input = " + input + "...");
+
+
         this.currShifter = currShifter;
 
-        // set up one list for 0s and one for 1s
+        // set up one list for 0s and one for 1s. Also set up two Buckets.
         this.content = new ArrayList<>();
         this.content.add(new ArrayList<>());
         this.content.add(new ArrayList<>());
         trace("Bucket.content is " + content);
+        this.subbuckets = new Bucket[2];
 
         // distribute content over the two lists
-        
-
+        for (Integer i :
+                input) {
+            int pos = (i >> currShifter) & 1;
+            trace("currShifter=" + currShifter + ", i=" + i + ", pos=" + pos);
+            this.content.get(pos).add(i);
+        }
         trace("Bucket content is now " + content);
+
+        // create subbuckets
+        for (int i = 0; i < 2; i++) {
+            List<Integer> sublist = content.get(i);
+            trace("checking for subbucket: i=" + i + " and bucket = " + sublist);
+            if (sublist.size() > 1 && noDuplicates(sublist)) {
+                subbuckets[i] = new Bucket((currShifter - 1), sublist);
+            }
+        }
     }
 
+    private boolean noDuplicates(List<Integer> data) {
+        boolean result = false;
+        for (int i = 1; i < data.size(); i++) {
+            if (!data.get(i-1).equals(data.get(i))) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    List<Integer> read() {
+        trace("Reading bucket of shifter=" + this.currShifter);
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            List<Integer> sublist = content.get(i);
+            trace("reading: sublist: " + sublist);
+            if (subbuckets[i] != null) {
+                trace("reading list from subbucket");
+                sublist = subbuckets[i].read();
+            }
+            for (Integer j :
+                    sublist) {
+                result.add(j);
+            }
+        }
+        trace("read() returning: shifter=" + currShifter + ", result=" + result);
+        return result;
+    }
 }
 
