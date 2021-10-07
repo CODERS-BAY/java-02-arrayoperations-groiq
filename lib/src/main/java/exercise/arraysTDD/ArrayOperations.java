@@ -45,7 +45,7 @@ public class ArrayOperations {
        return numbers;
     }
 
-    public void gnomeSort() {
+    private void gnomeSort() {
         int pos = 0;
         while (pos < (numbers.length - 1)) {
             if (numbers[pos] > numbers[pos+1]) {
